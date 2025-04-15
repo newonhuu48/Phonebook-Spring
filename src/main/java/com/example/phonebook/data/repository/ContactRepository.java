@@ -10,8 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
 
-    //Contact findById(long id);
-
     List<Contact> findByFirstName(String firstName);
 
     List<Contact> findByLastName(String lastName);
