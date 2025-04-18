@@ -49,7 +49,7 @@ public class ContactController {
 
         contactService.createContact(contactDTO);
 
-        return "redirect:list";
+        return "redirect:/contacts";
     }
 
 
@@ -66,7 +66,7 @@ public class ContactController {
         return "edit";
     }
 
-    @PutMapping("/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String updateContact(@PathVariable long id, @ModelAttribute("contact") @Valid UpdateContactDTO contactDTO, BindingResult bindingResult, Model model) {
 
         if(bindingResult.hasErrors()) {
@@ -76,7 +76,7 @@ public class ContactController {
 
         contactService.updateContact(id, contactDTO);
 
-        return "redirect:list";
+        return "redirect:/contacts";
     }
 
 
@@ -90,10 +90,10 @@ public class ContactController {
         return "delete";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteContact(@PathVariable long id) {
         contactService.deleteContact(id);
 
-        return "redirect:list";
+        return "redirect:/contacts";
     }
 }

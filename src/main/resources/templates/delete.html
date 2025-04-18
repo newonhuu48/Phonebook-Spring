@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Contact</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Are you sure you want to delete this contact?</h2>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Contact Details</h5>
+            <p class="card-text"><strong>First Name:</strong> <span th:text="${contact.firstName}"></span></p>
+            <p class="card-text"><strong>Last Name:</strong> <span th:text="${contact.lastName}"></span></p>
+            <p class="card-text"><strong>Email:</strong> <span th:text="${contact.email}"></span></p>
+            <p class="card-text"><strong>Phone:</strong> <span th:text="${contact.phoneNumber}"></span></p>
+            <p class="card-text"><strong>Favorite:</strong> <span th:text="${contact.favorite ? 'Yes' : 'No'}"></span></p>
+        </div>
+    </div>
+
+    <form action="#" th:action="@{/contacts/delete/{id}(id=${contact.id})}" method="post">
+        <button type="submit" class="btn btn-danger mt-3">Delete</button>
+        <a href="#" class="btn btn-secondary mt-3" th:href="@{/contacts}">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
