@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search by First Name</title>
+</head>
+<body>
+<h2>Search by First Name</h2>
+
+<!-- Display error message if any -->
+<div th:if="${error}" class="alert alert-danger">
+    <span th:text="${error}"></span>
+</div>
+
+<form th:action="@{/contacts/search/firstname}" method="get">
+    <input type="text" name="firstName" placeholder="Enter first name" required>
+    <button type="submit">Search</button>
+</form>
+
+</body>
+</html>

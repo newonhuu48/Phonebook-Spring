@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search by Phone</title>
+</head>
+<body>
+<h2>Search by Phone Number</h2>
+
+<!-- Display error message if any -->
+<div th:if="${error}" class="alert alert-danger">
+    <span th:text="${error}"></span>
+</div>
+
+
+<form th:action="@{/contacts/search/phone}" method="get">
+    <input type="text" name="phoneNumber" placeholder="Enter phone number" required>
+    <button type="submit">Search</button>
+</form>
+</body>
+</html>

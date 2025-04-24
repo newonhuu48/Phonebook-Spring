@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,12 @@ public class ContactService {
 
 
     public List<ContactDTO> getAllContacts() {
-        return convertContactsToDtos(contactRepository.findAll());
+        List<Contact> contacts = contactRepository.findAll();
+
+        //FAVORITES FIRST
+        contacts.sort((c1, c2) -> Boolean.compare(c2.isFavorite(), c1.isFavorite()));
+
+        return convertContactsToDtos(contacts);
     }
 
 

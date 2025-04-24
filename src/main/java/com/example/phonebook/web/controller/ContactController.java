@@ -1,5 +1,6 @@
 package com.example.phonebook.web.controller;
 
+import com.example.phonebook.data.entity.Contact;
 import com.example.phonebook.dto.ContactDTO;
 import com.example.phonebook.dto.CreateContactDTO;
 import com.example.phonebook.dto.UpdateContactDTO;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -96,4 +98,91 @@ public class ContactController {
 
         return "redirect:/contacts";
     }
+
+
+
+    //CRITERIAL QUERIES
+    //FIRST NAME SEARCH
+    @GetMapping("/search/firstname")
+    public String searchByFirstName(@RequestParam(required = false) String firstName, Model model) {
+        if (firstName == null || firstName.trim().isEmpty()) {
+            model.addAttribute("error", "First name cannot be empty.");
+            return "search/firstname-search";
+        }
+
+        List<ContactDTO> contacts = contactService.getContactsByFirstName(firstName);
+
+        model.addAttribute("contacts", contacts);
+        return "list";
+    }
+
+    @GetMapping("/search/firstname/showform")
+    public String showSearchByFirstNameForm() {
+        return "/search/firstname-search";
+    }
+
+
+    //LAST NAME SEARCH
+    @GetMapping("/search/lastname")
+    public String searchByLastName(@RequestParam(required = false) String lastName, Model model) {
+        if (lastName == null || lastName.trim().isEmpty()) {
+            model.addAttribute("error", "Last name cannot be empty.");
+            return "search/lastname-search";
+        }
+
+        List<ContactDTO> contacts = contactService.getContactsByLastName(lastName);
+
+        model.addAttribute("contacts", contacts);
+        return "list";
+    }
+
+    @GetMapping("/search/lastname/showform")
+    public String showSearchByLastNameForm() {
+        return "/search/lastname-search"; // template for searching by last name
+    }
+
+
+    //PHONE NUMBER SEARCH
+    @GetMapping("/search/phone")
+    public String searchByPhoneNumber(@RequestParam(required = false) String phoneNumber, Model model) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            model.addAttribute("error", "Phone number cannot be empty.");
+            return "search/phone-search";
+        }
+
+        List<ContactDTO> contacts = contactService.getContactsByPhoneNumber(phoneNumber);
+
+        model.addAttribute("contacts", contacts);
+        return "list";
+    }
+
+    @GetMapping("/search/phone/showform")
+    public String showSearchByPhoneNumberForm() {
+        return "/search/phone-search"; // template for searching by phone number
+    }
+
+
+    //EMAIL SEARCH
+    @GetMapping("/search/email")
+    public String searchByEmail(@RequestParam(required = false) String email, Model model) {
+        if (email == null || email.trim().isEmpty()) {
+            model.addAttribute("error", "Email cannot be empty.");
+            return "search/email-search";
+        }
+
+        List<ContactDTO> contacts = contactService.getContactsByEmail(email);
+
+        model.addAttribute("contacts", contacts);
+        return "list";
+    }
+
+    @GetMapping("/search/email/showform")
+    public String showSearchByEmailForm() {
+        return "/search/email-search"; // template for searching by email
+    }
+
+
 }
+
+
+

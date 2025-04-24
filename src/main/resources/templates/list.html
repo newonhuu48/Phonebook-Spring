@@ -47,11 +47,43 @@
             background-color: #dc3545;
         }
     </style>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand text-light" href="/contacts">Contacts Manager</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            <!-- Add the "Search By..." text -->
+            <li class="nav-item">
+                <span class="nav-link text-light">Search By...</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" th:href="@{/contacts/search/firstname/showform}">First Name</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" th:href="@{/contacts/search/lastname/showform}">Last Name</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" th:href="@{/contacts/search/phone/showform}">Phone Number</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" th:href="@{/contacts/search/email/showform}">Email</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <h1>Contact List</h1>
 
 <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+
 
 <a class="add-button" th:href="@{/contacts/create}">Add New Contact</a>
 
@@ -84,12 +116,14 @@
                 <span th:text="${contact.isFavorite ? 'Yes' : 'No'}"></span>
             </td>
             <td class="actions">
-                <a th:href="@{'/contacts/edit/' + ${contact.id}}">Edit</a>
-                <a th:href="@{'/contacts/delete/' + ${contact.id}}">Delete</a>
+                <a th:href="@{'/contacts/edit/' + ${contact.id}}" class="btn btn-primary">Edit</a>
+                <a th:href="@{'/contacts/delete/' + ${contact.id}}" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

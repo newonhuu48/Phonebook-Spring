@@ -14,8 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateContactDTO {
 
-    private long id;
-
     @NotEmpty(message = "First name cannot be empty")
     private String firstName;
 

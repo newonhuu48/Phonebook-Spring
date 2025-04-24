@@ -17,4 +17,5 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByPhoneNumber(String phoneNumber);
 
     List<Contact> findByEmail(String email);
+
 }
