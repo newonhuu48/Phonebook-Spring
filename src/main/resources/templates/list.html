@@ -46,12 +46,25 @@
         .delete-btn {
             background-color: #dc3545;
         }
+
+
+        th span {
+            margin-left: 5px;
+            font-size: 1.2em;
+        }
+
+        th a {
+            text-decoration: none;
+            color: inherit;
+        }
     </style>
 
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
+
+<!-- NAVBAR + CRITERIAL QUERIES -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
     <a class="navbar-brand text-light" href="/contacts">Contacts Manager</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,30 +96,117 @@
 
 <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-
-
 <a class="add-button" th:href="@{/contacts/create}">Add New Contact</a>
 
-<div th:if="${contacts.size() == 0}">
+
+<!--
+    SEARCH FORM FOR
+    CRITERIA QUERIES
+
+    First Name
+    Last Name
+    Phone Number
+    Email
+-->
+<form th:action="@{/contacts}" method="get" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col">
+            <input type="text" name="firstName" class="form-control" placeholder="First Name" th:value="${param.firstName}">
+        </div>
+        <div class="col">
+            <input type="text" name="lastName" class="form-control" placeholder="Last Name" th:value="${param.lastName}">
+        </div>
+        <div class="col">
+            <input type="text" name="phoneNumber" class="form-control" placeholder="Phone" th:value="${param.phoneNumber}">
+        </div>
+        <div class="col">
+            <input type="text" name="email" class="form-control" placeholder="Email" th:value="${param.email}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+
+<!--
+    SELECT HOW MUCH CONTACTS TO BE SHOWN ON ONE PAGE
+    10
+    25
+    50
+-->
+<form th:action="@{/contacts}" method="get" class="mb-3">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+            <label for="recordsPerPage" class="form-label">Records Per Page</label>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="recordsPerPage" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span th:text="${param.size != null ? param.size : 'Select records'}">Select records</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="recordsPerPage">
+                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=10)}">10</a></li>
+                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=25)}">25</a></li>
+                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=50)}">50</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!--
+    CONTACTS LIST TABLE
+-->
+<div th:if="${contactsPage.content.size() == 0}">
     <p class="text-muted">No contacts found.</p>
 </div>
 
-<div th:if="${contacts.size() > 0}">
+<div th:if="${contactsPage.content.size() > 0}">
     <table>
-        <p class="text-muted">Showing <span th:text="${contacts.size()}"></span> contact(s).</p>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Is Favorite</th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='id', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    ID
+                    <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='firstName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    First Name
+                    <span th:if="${sortField == 'firstName'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='lastName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    Last Name
+                    <span th:if="${sortField == 'lastName'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='phoneNumber', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    Phone Number
+                    <span th:if="${sortField == 'phoneNumber'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='email', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    Email
+                    <span th:if="${sortField == 'email'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/contacts(page=${currentPage}, size=${contactsPage.size}, sortField='isFavorite', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'})}">
+                    Is Favorite
+                    <span th:if="${sortField == 'isFavorite'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <!-- Actions column header (no links) -->
             <th>Actions</th>
         </tr>
         </thead>
+
         <tbody>
-        <tr th:each="contact : ${contacts}">
+        <tr th:each="contact : ${contactsPage.content}">
             <td th:text="${contact.id}">1</td>
             <td th:text="${contact.firstName}">John</td>
             <td th:text="${contact.lastName}">Doe</td>
@@ -122,6 +222,38 @@
         </tr>
         </tbody>
     </table>
+
+
+    <!-- PAGES NAVIGATION BAR -->
+    <div>
+        <span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${totalPages}" class="text-muted"></span>
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" th:if="${currentPage > 0}">
+                    <a th:href="@{/contacts(page=${currentPage - 1}, size=${contactsPage.size}, sortField=${sortField}, sortDir=${sortDir})}"
+                       class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item disabled" th:if="${currentPage == 0}">
+                    <span class="page-link" aria-label="Previous">&laquo;</span>
+                </li>
+
+                <li class="page-item disabled" th:if="${currentPage + 1 >= totalPages}">
+                    <span class="page-link" aria-label="Next">&raquo;</span>
+                </li>
+
+                <li class="page-item" th:if="${currentPage + 1 < totalPages}">
+                    <a th:href="@{/contacts(page=${currentPage + 1}, size=${contactsPage.size}, sortField=${sortField}, sortDir=${sortDir})}"
+                       class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 
 <script src="/js/bootstrap.bundle.min.js"></script>

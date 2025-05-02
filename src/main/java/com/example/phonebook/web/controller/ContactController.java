@@ -1,6 +1,5 @@
 package com.example.phonebook.web.controller;
 
-import com.example.phonebook.data.entity.Contact;
 import com.example.phonebook.dto.ContactDTO;
 import com.example.phonebook.dto.CreateContactDTO;
 import com.example.phonebook.dto.UpdateContactDTO;
@@ -8,13 +7,11 @@ import com.example.phonebook.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -26,11 +23,29 @@ public class ContactController {
 
 
     @GetMapping
-    public String getContacts(Model model) {
-        final List<ContactDTO> contacts = contactService.getAllContacts();
+    public String getContacts(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "isFavorite") String sortField,
+            @RequestParam(defaultValue = "dsc") String sortDir,
+            Model model) {
 
-        model.addAttribute("contacts", contacts);
-        return "list";
+        // Call the service to get contacts based on the criteria
+        Page<ContactDTO> contactsPage = contactService.getContacts(firstName, lastName, phoneNumber,email, page, size, sortField, sortDir);
+
+        // Add the necessary attributes to the model
+        model.addAttribute("contactsPage", contactsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", contactsPage.getTotalPages());
+        model.addAttribute("totalItems", contactsPage.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+
+        return "list"; // Return the view name
     }
 
 
@@ -98,90 +113,6 @@ public class ContactController {
 
         return "redirect:/contacts";
     }
-
-
-
-    //CRITERIAL QUERIES
-    //FIRST NAME SEARCH
-    @GetMapping("/search/firstname")
-    public String searchByFirstName(@RequestParam(required = false) String firstName, Model model) {
-        if (firstName == null || firstName.trim().isEmpty()) {
-            model.addAttribute("error", "First name cannot be empty.");
-            return "search/firstname-search";
-        }
-
-        List<ContactDTO> contacts = contactService.getContactsByFirstName(firstName);
-
-        model.addAttribute("contacts", contacts);
-        return "list";
-    }
-
-    @GetMapping("/search/firstname/showform")
-    public String showSearchByFirstNameForm() {
-        return "/search/firstname-search";
-    }
-
-
-    //LAST NAME SEARCH
-    @GetMapping("/search/lastname")
-    public String searchByLastName(@RequestParam(required = false) String lastName, Model model) {
-        if (lastName == null || lastName.trim().isEmpty()) {
-            model.addAttribute("error", "Last name cannot be empty.");
-            return "search/lastname-search";
-        }
-
-        List<ContactDTO> contacts = contactService.getContactsByLastName(lastName);
-
-        model.addAttribute("contacts", contacts);
-        return "list";
-    }
-
-    @GetMapping("/search/lastname/showform")
-    public String showSearchByLastNameForm() {
-        return "/search/lastname-search"; // template for searching by last name
-    }
-
-
-    //PHONE NUMBER SEARCH
-    @GetMapping("/search/phone")
-    public String searchByPhoneNumber(@RequestParam(required = false) String phoneNumber, Model model) {
-        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            model.addAttribute("error", "Phone number cannot be empty.");
-            return "search/phone-search";
-        }
-
-        List<ContactDTO> contacts = contactService.getContactsByPhoneNumber(phoneNumber);
-
-        model.addAttribute("contacts", contacts);
-        return "list";
-    }
-
-    @GetMapping("/search/phone/showform")
-    public String showSearchByPhoneNumberForm() {
-        return "/search/phone-search"; // template for searching by phone number
-    }
-
-
-    //EMAIL SEARCH
-    @GetMapping("/search/email")
-    public String searchByEmail(@RequestParam(required = false) String email, Model model) {
-        if (email == null || email.trim().isEmpty()) {
-            model.addAttribute("error", "Email cannot be empty.");
-            return "search/email-search";
-        }
-
-        List<ContactDTO> contacts = contactService.getContactsByEmail(email);
-
-        model.addAttribute("contacts", contacts);
-        return "list";
-    }
-
-    @GetMapping("/search/email/showform")
-    public String showSearchByEmailForm() {
-        return "/search/email-search"; // template for searching by email
-    }
-
-
 }
 
 

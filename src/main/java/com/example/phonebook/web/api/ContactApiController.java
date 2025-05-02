@@ -8,6 +8,8 @@ import com.example.phonebook.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +22,31 @@ public class ContactApiController {
     private final ModelMapper modelMapper;
     private final ContactService contactService;
 
+    /*
+    @GetMapping
+    public ResponseEntity<Page<ContactDTO>> getAllContacts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "isFavorite") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        Page<ContactDTO> contactsPage = contactService.getAllContacts(page, size, sortField, sortDir);
+        return ResponseEntity.ok(contactsPage);
+    }
+    */
 
     @GetMapping
-    public List<ContactDTO> getAllContacts() {
-        return contactService.getAllContacts();
+    public Page<ContactDTO> getContacts(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return contactService.getContacts(firstName, lastName, phoneNumber, email, page, size, sortField, sortDir);
     }
 
     @GetMapping("/{id}")
@@ -31,25 +54,6 @@ public class ContactApiController {
         return contactService.getContactById(id);
     }
 
-    @GetMapping("/first-name/{firstName}")
-    public List<ContactDTO> getContactsByFirstName(@PathVariable String firstName) {
-        return contactService.getContactsByFirstName(firstName);
-    }
-
-    @GetMapping("/last-name/{lastName}")
-    public List<ContactDTO> getContactsByLastName(@PathVariable String lastName) {
-        return contactService.getContactsByLastName(lastName);
-    }
-
-    @GetMapping("/phone-number/{phoneNumber}")
-    public List<ContactDTO> getContactsByPhoneNumber(@PathVariable String phoneNumber) {
-        return contactService.getContactsByPhoneNumber(phoneNumber);
-    }
-
-    @GetMapping("/email/{email}")
-    public List<ContactDTO> getContactsByEmail(@PathVariable String email) {
-        return contactService.getContactsByEmail(email);
-    }
 
 
     @PostMapping

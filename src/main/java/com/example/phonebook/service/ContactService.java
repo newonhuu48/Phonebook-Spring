@@ -2,14 +2,19 @@ package com.example.phonebook.service;
 
 import com.example.phonebook.data.entity.Contact;
 import com.example.phonebook.data.repository.ContactRepository;
+import com.example.phonebook.data.repository.specifications.ContactSpecifications;
 import com.example.phonebook.dto.ContactDTO;
 import com.example.phonebook.dto.CreateContactDTO;
 import com.example.phonebook.dto.UpdateContactDTO;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,14 +26,37 @@ public class ContactService {
     private final ModelMapper modelMapper;
 
 
-    public List<ContactDTO> getAllContacts() {
-        List<Contact> contacts = contactRepository.findAll();
+    public Page<ContactDTO> getContacts(
+            String firstName, String lastName, String phoneNumber, String email,
+            int page, int size, String sortField, String sortDir) {
 
-        //FAVORITES FIRST
-        contacts.sort((c1, c2) -> Boolean.compare(c2.isFavorite(), c1.isFavorite()));
 
-        return convertContactsToDtos(contacts);
+        Pageable pageable = PageRequest.of(page, size,
+                sortDir.equals("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
+
+
+        Specification<Contact> spec = Specification.where(null);
+
+        //ADDING FIELDS TO SPECIFICATION
+        //FOR CRITERIA QUERY
+        if(firstName != null && !firstName.isBlank() ) {
+            spec = spec.and(ContactSpecifications.hasFirstName(firstName));
+        }
+        if(lastName != null && !lastName.isBlank() ) {
+            spec = spec.and(ContactSpecifications.hasLastName(lastName));
+        }
+        if(phoneNumber != null && !phoneNumber.isBlank()) {
+            spec = spec.and(ContactSpecifications.hasPhoneNumber(phoneNumber));
+        }
+        if(email != null && !email.isBlank()) {
+            spec = spec.and(ContactSpecifications.hasEmail(email));
+        }
+
+        Page<Contact> contactsPage = contactRepository.findAll(spec, pageable);
+
+        return contactsPage.map(contact -> modelMapper.map(contact, ContactDTO.class));
     }
+
 
 
     public ContactDTO getContactById(long id) {
@@ -37,22 +65,6 @@ public class ContactService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id: " + id));
     }
 
-
-    public List<ContactDTO> getContactsByFirstName(String firstName) {
-        return convertContactsToDtos(contactRepository.findByFirstName(firstName));
-    }
-
-    public List<ContactDTO> getContactsByLastName(String lastName) {
-        return  convertContactsToDtos(contactRepository.findByLastName(lastName) );
-    }
-
-    public List<ContactDTO> getContactsByPhoneNumber(String phoneNumber) {
-        return  convertContactsToDtos(contactRepository.findByPhoneNumber(phoneNumber) );
-    }
-
-    public List<ContactDTO> getContactsByEmail(String email) {
-        return  convertContactsToDtos(contactRepository.findByEmail(email) );
-    }
 
 
     //CREATE
