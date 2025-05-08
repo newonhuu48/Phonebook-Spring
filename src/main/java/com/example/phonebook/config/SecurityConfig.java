@@ -1,6 +1,5 @@
 package com.example.phonebook.config;
 
-import com.example.phonebook.security.CustomAuthenticationFailureHandler;
 import com.example.phonebook.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
