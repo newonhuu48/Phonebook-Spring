@@ -39,6 +39,7 @@ public class ContactController {
 
         // Add the necessary attributes to the model
         model.addAttribute("contactsPage", contactsPage);
+        
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", contactsPage.getTotalPages());
         model.addAttribute("totalItems", contactsPage.getTotalElements());

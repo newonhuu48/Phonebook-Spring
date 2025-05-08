@@ -10,6 +10,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception exception, Model model) {
         model.addAttribute("errorMessage", "Something went wrong: " + exception.getMessage());
-        return "redirect:/contacts";
+        return "redirect:/";
     }
 }
