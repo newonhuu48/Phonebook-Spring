@@ -28,10 +28,9 @@ public class UserService {
 
     public boolean registerUser(User user) {
         // Check if user already exists
-        User existingUser = userRepository.findByUsername(user.getUsername());
-
-        if (existingUser != null) {
-            return false;
+        Optional<User> existingUserOptional = userRepository.findByUsername(user.getUsername());
+        if (existingUserOptional.isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
         }
 
         // Encode password with BCrypt hashing

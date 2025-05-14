@@ -8,10 +8,11 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,17 +36,24 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return "redirect:/"; // or wherever you want to redirect
-        } catch (Exception e) {
+            return "redirect:/";
+        } catch (BadCredentialsException e) {
+
+            System.out.println("Debug: BadCredentialsException caught");
             model.addAttribute("error", "Invalid username or password");
-            return "login";
+            return "redirect:/auth/login?error=true";  // Return to login page
+        } catch (Exception e) {
+
+            System.out.println("Debug: General Exception caught");
+            model.addAttribute("error", "Invalid username or password");
+            return "redirect:/auth/login?error=true";  // Redirect to the login page with error flag on failure
         }
     }
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("user", new User());
-        return "login";
+        return "auth/login";
     }
 
 
@@ -60,18 +68,18 @@ public class AuthController {
                 return "redirect:/auth/login"; // Redirect to login if registration is successful
             } else {
                 model.addAttribute("error", "Username already exists"); // Show error message
-                return "register"; // Stay on registration page if user already exists
+                return "auth/register"; // Stay on registration page if user already exists
             }
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage()); // Display error message if username exists
-            return "register";
+            return "auth/register";
         }
     }
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "auth/register";
     }
 
 

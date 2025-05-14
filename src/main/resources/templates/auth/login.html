@@ -20,9 +20,9 @@
                 <input th:field="*{password}" name="password" type="password" class="form-control" required />
             </div>
 
-            <!--  -->
-            <div th:if="${error}" class="alert alert-danger" role="alert">
-                <span th:text="${error}"></span>
+            <!-- ERROR -->
+            <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                Invalid username or password
             </div>
 
             <!-- Success Message (after successful registration) -->
