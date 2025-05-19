@@ -13,7 +13,7 @@ public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
 
     @Column(nullable = false)
@@ -28,8 +28,13 @@ public class Contact {
     @Column(nullable = true)
     private String email;
 
-
     @Column
     private boolean isFavorite;
+
+
+    //USER (OWNER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }

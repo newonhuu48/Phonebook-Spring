@@ -12,7 +12,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +38,10 @@ public class AuthController {
             return "redirect:/";
         } catch (BadCredentialsException e) {
 
-            System.out.println("Debug: BadCredentialsException caught");
             model.addAttribute("error", "Invalid username or password");
             return "redirect:/auth/login?error=true";  // Return to login page
         } catch (Exception e) {
 
-            System.out.println("Debug: General Exception caught");
             model.addAttribute("error", "Invalid username or password");
             return "redirect:/auth/login?error=true";  // Redirect to the login page with error flag on failure
         }

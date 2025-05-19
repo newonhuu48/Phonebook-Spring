@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,10 +60,21 @@
                     <button type="submit" class="btn btn-danger">Logout</button>
                 </form>
             </li>
+
         </ul>
 
     </div>
 </nav>
+
+<div class="float-right text-right bg-light pr-3">
+    <div>Logged in as <strong th:text="${#authentication.name}">Username</strong></div>
+    <div>
+        Roles:
+        <span th:each="role, stat : ${#authentication.authorities}">
+      <span th:text="${role.authority}">ROLE_USER</span><span th:if="${!stat.last}">, </span>
+    </span>
+    </div>
+</div>
 
 <!-- Hero Section -->
 <section class="hero-section">
@@ -83,9 +94,17 @@
         <!-- API Contacts Link Block -->
         <div class="col-md-6">
             <div class="block">
-                <a href="/api/contacts">View API Contacts</a>
+                <a href="/api/contacts">View API Contacts(Admin only)</a>
             </div>
         </div>
+
+        <!-- Admin Dashboard -->
+        <div class="col-md-6" sec:authorize="hasRole('ADMIN')">
+            <div class="block">
+                <a href="/admin/dashboard">Admin Dashboard</a>
+            </div>
+        </div>
+
     </div>
 </div>
 

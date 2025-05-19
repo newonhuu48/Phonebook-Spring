@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .userDetailsService(customUserDetailsService)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 

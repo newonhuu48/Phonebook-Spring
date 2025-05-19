@@ -74,63 +74,12 @@
 
 <h1>Contact List</h1>
 
-<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
 <a class="add-button" th:href="@{/contacts/create}">Add New Contact</a>
 
 
-<!--
-    SEARCH FORM FOR
-    CRITERIA QUERIES
 
-    First Name
-    Last Name
-    Phone Number
-    Email
--->
-<form th:action="@{/contacts}" method="get" class="mb-3">
-    <div class="row g-2 align-items-end">
-        <div class="col">
-            <input type="text" name="firstName" class="form-control" placeholder="First Name" th:value="${param.firstName}">
-        </div>
-        <div class="col">
-            <input type="text" name="lastName" class="form-control" placeholder="Last Name" th:value="${param.lastName}">
-        </div>
-        <div class="col">
-            <input type="text" name="phoneNumber" class="form-control" placeholder="Phone" th:value="${param.phoneNumber}">
-        </div>
-        <div class="col">
-            <input type="text" name="email" class="form-control" placeholder="Email" th:value="${param.email}">
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </div>
-</form>
-
-<!--
-    SELECT HOW MUCH CONTACTS TO BE SHOWN ON ONE PAGE
-    10
-    25
-    50
--->
-<form th:action="@{/contacts}" method="get" class="mb-3">
-    <div class="row g-2 align-items-center">
-        <div class="col">
-            <label for="recordsPerPage" class="form-label">Records Per Page</label>
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="recordsPerPage" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span th:text="${param.size != null ? param.size : 'Select records'}">Select records</span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="recordsPerPage">
-                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=10)}">10</a></li>
-                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=25)}">25</a></li>
-                    <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=50)}">50</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</form>
 
 
 <!--
@@ -141,6 +90,60 @@
 </div>
 
 <div th:if="${contactsPage.content.size() > 0}">
+    <!--
+        SEARCH FORM FOR
+        CRITERIA QUERIES
+
+        First Name
+        Last Name
+        Phone Number
+        Email
+    -->
+    <form th:action="@{/contacts}" method="get" class="mb-3">
+        <div class="row g-2 align-items-end">
+            <div class="col">
+                <input type="text" name="firstName" class="form-control" placeholder="First Name" th:value="${param.firstName}">
+            </div>
+            <div class="col">
+                <input type="text" name="lastName" class="form-control" placeholder="Last Name" th:value="${param.lastName}">
+            </div>
+            <div class="col">
+                <input type="text" name="phoneNumber" class="form-control" placeholder="Phone" th:value="${param.phoneNumber}">
+            </div>
+            <div class="col">
+                <input type="text" name="email" class="form-control" placeholder="Email" th:value="${param.email}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!--
+        PAGINATION PAGE SIZE SELECTION
+        10
+        25
+        50
+    -->
+    <form th:action="@{/contacts}" method="get" class="mb-3">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <label for="recordsPerPage" class="form-label">Records Per Page</label>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="recordsPerPage" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="${param.size != null ? param.size : 'Select records'}">Select records</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="recordsPerPage">
+                        <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=10)}">10</a></li>
+                        <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=25)}">25</a></li>
+                        <li><a class="dropdown-item" href="#" th:href="@{/contacts(size=50)}">50</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
     <table>
         <thead>
         <tr>

@@ -34,8 +34,9 @@ public class ContactController {
             @RequestParam(defaultValue = "dsc") String sortDir,
             Model model) {
 
+
         // Call the service to get contacts based on the criteria
-        Page<ContactDTO> contactsPage = contactService.getContacts(firstName, lastName, phoneNumber,email, page, size, sortField, sortDir);
+        Page<ContactDTO> contactsPage = contactService.getContactsByUser(firstName, lastName, phoneNumber,email, page, size, sortField, sortDir);
 
         // Add the necessary attributes to the model
         model.addAttribute("contactsPage", contactsPage);
@@ -54,7 +55,7 @@ public class ContactController {
     //CREATE CONTACT
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        model.addAttribute("contact", new ContactDTO());
+        model.addAttribute("contact", new CreateContactDTO());
         return "create";
     }
 
@@ -76,12 +77,10 @@ public class ContactController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable long id, Model model) {
 
-        ContactDTO contactDTO = contactService.getContactById(id);
-
-        UpdateContactDTO updateContactDTO = modelMapper.map(contactDTO, UpdateContactDTO.class);
-        model.addAttribute("contact", updateContactDTO);
-
-        return "edit";
+            ContactDTO contactDTO = contactService.getContactById(id);
+            UpdateContactDTO updateContactDTO = modelMapper.map(contactDTO, UpdateContactDTO.class);
+            model.addAttribute("contact", updateContactDTO);
+            return "edit";
     }
 
     @PostMapping("/edit/{id}")

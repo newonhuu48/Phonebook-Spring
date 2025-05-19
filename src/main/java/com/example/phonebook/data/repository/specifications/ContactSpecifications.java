@@ -1,6 +1,7 @@
 package com.example.phonebook.data.repository.specifications;
 
 import com.example.phonebook.data.entity.Contact;
+import com.example.phonebook.data.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 
 
@@ -19,5 +20,9 @@ public class ContactSpecifications {
 
     public static Specification<Contact> hasEmail(String email) {
         return (root, query, cb) -> cb.equal(root.get("email"), email);
+    }
+
+    public static Specification<Contact> belongsToUser(User user) {
+        return (root, query, cb) -> cb.equal(root.get("user"), user);
     }
 }
