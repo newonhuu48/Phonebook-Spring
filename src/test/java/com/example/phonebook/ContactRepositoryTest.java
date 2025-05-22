@@ -1,6 +1,7 @@
 package com.example.phonebook;
 
 import com.example.phonebook.data.entity.Contact;
+import com.example.phonebook.data.entity.User;
 import com.example.phonebook.data.repository.ContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,14 @@ public class ContactRepositoryTest {
     @BeforeEach
     void setUp() {
         // Initialize the Contact object to be used in the tests
-        contact = new Contact(1L, "John", "Doe", "+1234567890", "john.doe@example.com", false);
+        contact = new Contact();
+
+        contact.setId(1L);
+        contact.setFirstName("John");
+        contact.setLastName("Doe");
+        contact.setPhoneNumber("+1234567890");
+        contact.setEmail("john.doe@example.com");
+        contact.setFavorite(false);
     }
 
     @Test

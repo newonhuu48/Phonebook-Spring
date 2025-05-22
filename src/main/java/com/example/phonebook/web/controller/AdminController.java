@@ -56,7 +56,7 @@ public class AdminController {
 
 
 
-    //DELETE
+    //DELETE USER
     @GetMapping("/delete/{id}")
     public String showDeleteUserForm(@PathVariable Long id, Model model) {
         UserDTO userDTO = userService.getUserById(id);

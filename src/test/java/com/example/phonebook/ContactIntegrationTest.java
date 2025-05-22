@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@SpringBootTest
-@Transactional
+@SpringBootTest //This loads the whole Spring not just Repository or just Controller
+@Transactional // Ensures changes are rolled back after each test, keeping the database clean
 @AutoConfigureMockMvc
 public class ContactIntegrationTest {
 
