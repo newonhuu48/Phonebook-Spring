@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-phonebook
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: phonebook_spring
+    ports:
+      - "1433:3306"   # map MySQL 3306 inside container to 1433 on host
+    volumes:
+      - ./phonebook_dump.sql:/docker-entrypoint-initdb.d/phonebook_db_dump.sql
+    networks:
+      - phonebook-net
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - phonebook-net
+
+networks:
+  phonebook-net:
